@@ -1,0 +1,43 @@
+---
+name: generate animation
+on:
+  # run automatically every 24 hours
+  schedule:
+    - cron: 0 */24 * * *
+
+  # allows to manually run the job at any time
+  workflow_dispatch:
+  # run on every push on the main branch
+  push:
+    branches:
+      - main
+jobs:
+  generate:
+    permissions:
+      contents: write
+      pull-requests: write
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # ref: ${{ github.head_ref }}
+          fetch-depth: 0
+      # generates a snake game from a github user (<github_user_name>) contributions graph, output a svg animation at <svg_out_path>
+      - name: generate github-contribution-grid-snake.svg
+        uses: Platane/snk/svg-only@83033510f0a619ff97227fcefed6fc377b1999ab
+        with:
+          github_user_name: ${{ github.repository_owner }}
+          outputs: |
+            github-contribution-grid-snake.svg
+            github-contribution-grid-snake-dark.svg?palette=github-dark
+      - name: New Branch
+        run: |
+          git checkout --orphan output
+          git rm --cached -r .
+          git config --global user.email "bot@ministry.eu.org"
+          git config --global user.name "actionbot"
+          git add  git*svg
+          git commit -m "Update Snake" --allow-empty
+          git push --set-upstream --force origin output
