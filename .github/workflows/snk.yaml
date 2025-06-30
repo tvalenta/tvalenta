@@ -26,7 +26,7 @@ jobs:
           fetch-depth: 0
       # generates a snake game from a github user (<github_user_name>) contributions graph, output a svg animation at <svg_out_path>
       - name: generate github-contribution-grid-snake.svg
-        uses: Platane/snk/svg-only@83033510f0a619ff97227fcefed6fc377b1999ab
+        uses: Platane/snk/svg-only@a865fccd87a8c9e886d38a508a56c6d40d70e9f7
         with:
           github_user_name: ${{ github.repository_owner }}
           outputs: |
